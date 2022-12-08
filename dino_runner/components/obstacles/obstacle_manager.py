@@ -12,8 +12,9 @@ class ObstacleManager:
         self.obstacles: list[Obstacle] = []
 
     def update(self, game):
-        obstacle_random = random.randint(0,2)
+        
         if len(self.obstacles) == 0:
+            obstacle_random = random.randint(0,2)
             if obstacle_random == 0:
                 self.obstacles.append(LargeCactus(LARGE_CACTUS))
             elif obstacle_random == 1:
@@ -26,7 +27,11 @@ class ObstacleManager:
             if game.player.dino_rect.colliderect(obstacle.rect):
                 pygame.time.delay(1000)
                 game.playing = False
+                game.death_count += 1
 
     def draw(self, screen):
         for obstacle in self.obstacles:
             obstacle.draw(screen)
+
+    def reset_obstacles(self):
+        self.obstacles = []

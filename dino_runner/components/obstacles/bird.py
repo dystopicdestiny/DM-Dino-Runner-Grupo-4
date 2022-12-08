@@ -15,18 +15,15 @@ class Bird(Obstacle):
         super().__init__(image, self.type)
         self.rect.y = self.Y_POS_BIRD
 
+    def update(self, game_speed, obstacles: list):
+        self.fly()
+        super().update(game_speed, obstacles)
+
     def fly(self):
         self.image = BIRD[0] if self.step_index < 5 else BIRD[1]
-        self.reset_bird_rect()
         self.step_index += 1
         if self.step_index >= 10:
             self.step_index = 0
     
     def draw(self, screen):
         screen.blit(self.image, (self.rect.x, self.rect.y))
-    
-
-    def reset_bird_rect(self):
-        self.bird_rect = self.image.get_rect()
-        self.bird_rect.y = self.Y_POS_BIRD
-
