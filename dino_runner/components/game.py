@@ -1,9 +1,10 @@
 import pygame
+from dino_runner.components.death import Death
 
 from dino_runner.components.dinosaur import Dinosaur
 from dino_runner.components.obstacles.obstacle_manager import ObstacleManager
 from dino_runner.components.score import Score
-from dino_runner.utils.constants import BG, DINO_START, FONT_STYLE, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS
+from dino_runner.utils.constants import BG, DEATH, DINO_START, FONT_STYLE, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS
 
 
 class Game:
@@ -21,6 +22,7 @@ class Game:
         self.player = Dinosaur()
         self.obstacle_manager = ObstacleManager()
         self.score = Score()
+        self.death = Death()
         self.death_count = 0
         self.executing = False
 
@@ -35,11 +37,17 @@ class Game:
     def run(self):
         # Game loop: events - update - draw
         self.playing = True
-        self.obstacle_manager.reset_obstacles()
+        self.death.death()
+        self.reset_game()
         while self.playing:
             self.events()
             self.update()
             self.draw()
+
+    def reset_game(self):
+        self.obstacle_manager.reset_obstacles()
+        self.game_speed = 20
+        self.score.reset_score()
 
     def events(self):
         for event in pygame.event.get():
@@ -72,24 +80,22 @@ class Game:
             self.x_pos_bg = 0
         self.x_pos_bg -= self.game_speed
 
-    def draw_score(self):
-        pass
-
     def show_menu(self):
         self.screen.fill((255, 255, 255))
 
         half_screen_width = SCREEN_WIDTH // 2
         half_screen_height = SCREEN_HEIGHT // 2
-        if not self.death_count:
+        if self.death_count == 0:
             font = pygame.font.Font(FONT_STYLE, 30)
             message = font.render('Press any key to start', True, (0, 0, 0))
             message_rect = message.get_rect()
             message_rect.center = (half_screen_width, half_screen_height)
             self.screen.blit(message, message_rect)
+            self.screen.blit(DINO_START, (half_screen_width - 20, half_screen_height - 140))
         else:
-            print(self.death_count)
+            self.death.draw(self.screen)
+            self.score.death_score(self.screen)
 
-        self.screen.blit(DINO_START, (half_screen_width - 20, half_screen_height - 140))
         pygame.display.flip()
         self.handle_menu_events()
 
