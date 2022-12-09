@@ -52,6 +52,7 @@ class Game:
             self.draw()
 
     def initialize_game(self):
+        self.sound_game.play()
         self.obstacle_manager.reset_obstacles()
         self.power_up_manager.reset_power_ups()
         self.score.reset_score()
@@ -105,7 +106,6 @@ class Game:
         half_screen_width = SCREEN_WIDTH // 2
         half_screen_height = SCREEN_HEIGHT // 2
         if self.death_count == 0:
-            self.sound_game.play()
             draw_message_component("Press any key to start", self.screen)
             self.screen.blit(DINO_START, (half_screen_width - 30, half_screen_height - 140))
             pygame.display.flip()
