@@ -105,11 +105,12 @@ class Game:
         half_screen_width = SCREEN_WIDTH // 2
         half_screen_height = SCREEN_HEIGHT // 2
         if self.death_count == 0:
-
+            self.sound_game.play()
             draw_message_component("Press any key to start", self.screen)
             self.screen.blit(DINO_START, (half_screen_width - 30, half_screen_height - 140))
             pygame.display.flip()
         else:
+            self.sound_game.stop()
             self.sound_death.play()
             draw_message_component("Press any key to restart", self.screen)
             draw_message_component(f"Your score was: {self.score.current_score}", self.screen, pos_y_center=half_screen_height + 50)
