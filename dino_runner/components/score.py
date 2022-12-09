@@ -19,14 +19,5 @@ class Score:
         message_rect.center = (1000, 50)
         screen.blit(message, message_rect)
 
-    def death_score(self, screen):
-        half_screen_width = SCREEN_WIDTH // 2
-        half_screen_height = SCREEN_HEIGHT // 2
-        font = pygame.font.Font(FONT_STYLE, 22)
-        message = font.render(f"Your score was: {self.current_score}", True, (0, 0, 0))
-        message_rect = message.get_rect()
-        message_rect.midbottom = (half_screen_width, half_screen_height + 150)
-        screen.blit(message, message_rect)
-
     def reset_score(self):
         self.current_score = 0
