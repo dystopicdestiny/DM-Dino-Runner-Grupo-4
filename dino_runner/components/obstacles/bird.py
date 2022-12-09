@@ -1,11 +1,12 @@
 #from pygame.sprite import Sprite
 #from pygame.surface import Surface
+import random
 from dino_runner.components.obstacles.obstacle import Obstacle
 from dino_runner.utils.constants import BIRD
 
 
 class Bird(Obstacle):
-    Y_POS_BIRD = 325
+    # Y_POS_BIRD = random.randint(100,325)
 
     def __init__(self, image):
         self.image = BIRD[0]
@@ -13,7 +14,7 @@ class Bird(Obstacle):
         self.step_index = 0
         self.type = 0
         super().__init__(image, self.type)
-        self.rect.y = self.Y_POS_BIRD
+        self.rect.y = random.randint(150, 350)
 
     def update(self, game_speed, obstacles: list):
         self.fly()

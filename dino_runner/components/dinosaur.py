@@ -1,12 +1,13 @@
 import pygame
 
 from pygame.sprite import Sprite
-from dino_runner.utils.constants import DEFAULT_TYPE, DUCKING, JUMPING, JUMPING_SHIELD, RUNNING, RUNNING_SHIELD, SHIELD_TYPE, DUCKING_SHIELD
+from dino_runner.components.player_hearts.player_heart_manager import PlayerHeartManager
+from dino_runner.utils.constants import DEFAULT_TYPE, DUCKING, DUCKING_HAMMER, HAMMER_TYPE, HEAL_TYPE, JUMPING, JUMPING_HAMMER, JUMPING_SHIELD, RUNNING, RUNNING_HAMMER, RUNNING_SHIELD, SHIELD_TYPE, DUCKING_SHIELD
 from dino_runner.utils.text_utils import draw_message_component
 
-DUCK_IMG = {DEFAULT_TYPE: DUCKING, SHIELD_TYPE: DUCKING_SHIELD}
-RUN_IMG = {DEFAULT_TYPE: RUNNING, SHIELD_TYPE: RUNNING_SHIELD}
-JUMP_IMG = {DEFAULT_TYPE: JUMPING, SHIELD_TYPE: JUMPING_SHIELD}
+DUCK_IMG = {DEFAULT_TYPE: DUCKING, SHIELD_TYPE: DUCKING_SHIELD, HAMMER_TYPE: DUCKING_HAMMER}
+RUN_IMG = {DEFAULT_TYPE: RUNNING, SHIELD_TYPE: RUNNING_SHIELD, HAMMER_TYPE: RUNNING_HAMMER}
+JUMP_IMG = {DEFAULT_TYPE: JUMPING, SHIELD_TYPE: JUMPING_SHIELD, HAMMER_TYPE: JUMPING_HAMMER}
 
 
 class Dinosaur(Sprite):
@@ -27,7 +28,11 @@ class Dinosaur(Sprite):
         self.has_power_up = False
         self.shield = False
         self.shield_time_up = 0
+        self.hammer = False
+        self.hammer_time_up = 0
+        self.heal = False
         self.show_text = False
+        self.heart = PlayerHeartManager()
 
     def update(self, user_imput):
         if self.running:
@@ -59,7 +64,7 @@ class Dinosaur(Sprite):
         self.step_index += 1
 
     def jump(self):
-        self.image = JUMPING
+        self.image = JUMP_IMG[self.type]
         self.dino_rect.y -= self.jump_velocity * 4
         self.jump_velocity -= 0.8
         if self.jump_velocity < -self.JUMP_VELOCITY:
@@ -85,14 +90,27 @@ class Dinosaur(Sprite):
         if self.shield:
             time_to_show = round((self.shield_time_up - pygame.time.get_ticks()) / 1000, 2)
             if time_to_show >= 0 and self.show_text:
-                draw_message_component(f"Shield enabled for: {time_to_show}", screen, font_size = 18, pos_x_center=500, pos_y_center=40)
+                draw_message_component(
+                    f"Shield enabled for: {time_to_show}",
+                    screen,
+                    font_size = 18,
+                    pos_x_center=500,
+                    pos_y_center=40
+                )
             else:
                 self.shield = False
                 self.type = DEFAULT_TYPE
-                
 
-
-
-
-
-
+        if self.hammer:
+            time_to_show = round((self.hammer_time_up - pygame.time.get_ticks()) / 1000, 2)
+            if time_to_show >= 0 and self.show_text:
+                draw_message_component(
+                    f"Hammer enabled for: {time_to_show}",
+                    screen,
+                    font_size = 18,
+                    pos_x_center=500,
+                    pos_y_center=40
+                )
+            else:
+                self.hammer = False
+                self.type = DEFAULT_TYPE
